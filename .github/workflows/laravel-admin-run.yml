@@ -28,6 +28,11 @@ jobs:
         cd laravel-admin
         php -r "file_exists('.env') || copy('.env.example', '.env');"
 
+    - name: Update Dependencies
+      run: |
+        cd laravel-admin
+        composer update --no-ansi --no-interaction --prefer-dist
+
     - name: Install Dependencies
       run: |
         cd laravel-admin
