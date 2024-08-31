@@ -11,7 +11,7 @@ services:
             DB_PASSWORD: admin_pass
         command: 'php artisan serve --host=0.0.0.0'
         volumes:
-            - .:/app
+            - .:/app:rw
         ports:
             - "8000:8000"
         depends_on:
