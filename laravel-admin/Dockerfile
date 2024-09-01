@@ -1,33 +1,37 @@
+# Wybieramy oficjalny obraz PHP 8.3
 FROM php:8.3-cli
 
+# Instalacja zależności systemowych
 RUN apt-get update && apt-get install -y \
-    libfreetype6-dev \
-    libjpeg62-turbo-dev \
-    libpng-dev \
-    zlib1g-dev \
-    libxml2-dev \
-    libzip-dev \
-    libonig-dev \
-    graphviz \
-    && docker-php-ext-configure gd \
-    && docker-php-ext-install -j$(nproc) gd \
-    && docker-php-ext-install pdo_mysql mysqli zip sockets \
-    && docker-php-source delete \
-    && curl -sS https://getcomposer.org/installer | php -- \
-        --install-dir=/usr/local/bin --filename=composer
+    git \
+    curl \
+    zip \
+    unzip
 
-# Add user for Laravel application
-RUN groupadd -g 1000 www \
-    && useradd -u 1000 -ms /bin/bash -g www www
+# Instalacja zależności PHP
+RUN docker-php-ext-install pdo pdo_mysql
 
-# Set working directory
+# Instalacja kompozytora
+COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
+
+# Ustawienie katalogu roboczego
 WORKDIR /var/www
 
-# Copy existing application directory contents
-COPY --chown=www:www . .
+# Kopiowanie plików aplikacji do obrazu
+COPY . .
 
-# Change to non-root user
-USER www
+# Instalacja zależności aplikacji za pomocą Composera
+RUN composer install --no-interaction --prefer-dist --optimize-autoloader
 
-# Install Composer dependencies
-RUN composer install --no-dev --optimize-autoloader
+# Dodanie grupy i użytkownika 'admin'
+RUN groupadd -g 1000 admin && \
+    useradd -u 1000 -ms /bin/bash -g admin admin
+
+# Zmiana właściciela katalogu na użytkownika 'admin'
+RUN chown -R admin:admin /var/www
+
+# Ustawienie użytkownika, na którym będą wykonywane dalsze polecenia
+USER admin
+
+# Domyślne polecenie do uruchomienia serwera
+CMD ["php", "artisan", "serve", "--host=0.0.0.0", "--port=8000"]
