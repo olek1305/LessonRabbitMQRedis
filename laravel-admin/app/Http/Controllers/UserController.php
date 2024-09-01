@@ -40,7 +40,7 @@ class UserController extends Controller
         return response($user, ResponseAlias::HTTP_ACCEPTED);
     }
 
-    public function update(Request $request, int $id)
+    public function update(Request $request, int $id): Application|Response|ResponseFactory
     {
         $user = User::findOrFail($id);
 
@@ -61,7 +61,7 @@ class UserController extends Controller
         return response($user, ResponseAlias::HTTP_ACCEPTED);
     }
 
-    public function destroy(int $id)
+    public function destroy(int $id): Application|Response|ResponseFactory
     {
         User::destroy($id);
 
