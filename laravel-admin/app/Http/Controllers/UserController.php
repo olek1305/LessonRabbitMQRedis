@@ -25,10 +25,7 @@ class UserController extends Controller
 
     public function store(UserCreateRequest $request): ResponseFactory|Application|Response
     {
-        $user = User::create([
-            'first_name' => $request->input('first_name'),
-            'last_name' => $request->input('last_name'),
-            'email' => $request->input('email'),
+        $user = User::create($request->only('first_name', 'last_name', 'email') + [
             'password' => bcrypt($request->input('password')),
         ]);
 
@@ -39,12 +36,7 @@ class UserController extends Controller
     {
         $user = User::findOrFail($id);
 
-        $user->update([
-            'first_name' => $request->input('first_name'),
-            'last_name' => $request->input('last_name'),
-            'email' => $request->input('email'),
-            'password' => bcrypt($request->input('password')),
-        ]);
+        $user->update($request->only('first_name', 'last_name', 'email'));
 
         return response($user, ResponseAlias::HTTP_ACCEPTED);
     }
