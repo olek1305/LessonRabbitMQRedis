@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\UserCreateRequest;
+use App\Http\Requests\UserUpdateRequest;
 use App\Models\User;
 use Illuminate\Contracts\Routing\ResponseFactory;
 use Illuminate\Foundation\Application;
@@ -21,41 +23,27 @@ class UserController extends Controller
         return User::find($id);
     }
 
-    public function store(Request $request): ResponseFactory|Application|Response
+    public function store(UserCreateRequest $request): ResponseFactory|Application|Response
     {
-        $validatedData = $request->validate([
-            'first_name' => 'required|string|max:255',
-            'last_name' => 'required|string|max:255',
-            'email' => 'required|email|unique:users,email',
-            'password' => 'required|string|min:8',
-        ]);
-
         $user = User::create([
-            'first_name' => $validatedData['first_name'],
-            'last_name' => $validatedData['last_name'],
-            'email' => $validatedData['email'],
-            'password' => bcrypt($validatedData['password']),
+            'first_name' => $request->input('first_name'),
+            'last_name' => $request->input('last_name'),
+            'email' => $request->input('email'),
+            'password' => bcrypt($request->input('password')),
         ]);
 
         return response($user, ResponseAlias::HTTP_ACCEPTED);
     }
 
-    public function update(Request $request, int $id): Application|Response|ResponseFactory
+    public function update(UserUpdateRequest $request, int $id): Application|Response|ResponseFactory
     {
         $user = User::findOrFail($id);
 
-        $validatedData = $request->validate([
-            'first_name' => 'required|string|max:255',
-            'last_name' => 'required|string|max:255',
-            'email' => 'required|email|unique:users,email,' . $id,
-            'password' => 'required|string|min:8',
-        ]);
-
         $user->update([
-            'first_name' => $validatedData['first_name'],
-            'last_name' => $validatedData['last_name'],
-            'email' => $validatedData['email'],
-            'password' => bcrypt($validatedData['password']),
+            'first_name' => $request->input('first_name'),
+            'last_name' => $request->input('last_name'),
+            'email' => $request->input('email'),
+            'password' => bcrypt($request->input('password')),
         ]);
 
         return response($user, ResponseAlias::HTTP_ACCEPTED);
