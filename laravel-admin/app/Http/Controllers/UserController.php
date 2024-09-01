@@ -15,12 +15,20 @@ class UserController extends Controller
 {
     public function index(): string
     {
-        return User::all();
+        $users = User::paginate();
+
+        return response()->json($users);
     }
 
-    public function show(int $id): ?User
+    public function show(int $id): \Illuminate\Http\JsonResponse
     {
-        return User::find($id);
+        $user = User::find($id);
+
+        if ($user) {
+            return response()->json($user);
+        } else {
+            return response()->json(['error' => 'User not found'], 404);
+        }
     }
 
     public function store(UserCreateRequest $request): ResponseFactory|Application|Response
