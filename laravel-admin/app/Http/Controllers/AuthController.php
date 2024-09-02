@@ -9,18 +9,29 @@ use Symfony\Component\HttpFoundation\Response;
 
 class AuthController extends Controller
 {
-    public function login(Request $request): JsonResponse|array
+        public function login(Request $request): JsonResponse
     {
-        if(Auth::attempt($request->only('email', 'password'))) {
+        $credentials = $request->validate([
+            'email' => 'required|email',
+            'password' => 'required|string',
+        ]);
+
+        // User login attempt
+        if (Auth::attempt($credentials)) {
             $user = Auth::user();
 
-            $token = $user->createToken('admin')->accessToken;
+            // Creating a token with Passport
+            $tokenResult = $user->createToken('admin');
+            $token = $tokenResult->accessToken;
 
-            return [
+            return response()->json([
                 'token' => $token,
-            ];
+                'token_type' => 'Bearer',
+                'expires_at' => $tokenResult->token->expires_at,
+            ]);
         }
 
-        return response()->json(['Invalid Credentials!'], Response::HTTP_UNAUTHORIZED);
+        // Failed login attempt
+        return response()->json(['message' => 'Invalid Credentials!'], Response::HTTP_UNAUTHORIZED);
     }
 }
