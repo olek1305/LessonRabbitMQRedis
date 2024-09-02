@@ -2,13 +2,17 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\UpdateInfoRequest;
+use App\Http\Requests\UpdatePasswordRequest;
 use App\Http\Requests\UserCreateRequest;
 use App\Http\Requests\UserUpdateRequest;
 use App\Models\User;
 use Illuminate\Contracts\Routing\ResponseFactory;
 use Illuminate\Foundation\Application;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpFoundation\Response as ResponseAlias;
 
 class UserController extends Controller
@@ -54,5 +58,28 @@ class UserController extends Controller
         User::destroy($id);
 
         return response(null, ResponseAlias::HTTP_NO_CONTENT);
+    }
+
+    public function user()
+    {
+        return Auth::user();
+    }
+
+    public function updateInfo(UpdateInfoRequest $request)
+    {
+        $user = Auth::user();
+
+        $user->update($request->only('first_name', 'last_name', 'email'));
+
+        return response($user, ResponseAlias::HTTP_ACCEPTED);
+    }
+
+    public function updatePassword(UpdatePasswordRequest $request)
+    {
+        $user = Auth::user();
+
+        $user->update($request->only('password'));
+
+        return response($user, ResponseAlias::HTTP_ACCEPTED);
     }
 }
