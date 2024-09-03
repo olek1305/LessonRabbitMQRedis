@@ -11,7 +11,7 @@ use Symfony\Component\HttpFoundation\Response;
 
 class AuthController extends Controller
 {
-        public function login(Request $request): JsonResponse
+    public function login(Request $request): JsonResponse
     {
         $credentials = $request->validate([
             'email' => 'required|email',
@@ -45,6 +45,7 @@ class AuthController extends Controller
             'last_name' => $request->last_name,
             'email' => $request->email,
             'password' => bcrypt($request->password),
+            'role_id' => $request->role_id,
         ]);
 
         // Generating a token using Passport
