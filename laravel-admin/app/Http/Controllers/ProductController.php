@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\ProductCreateRequest;
 use App\Http\Resources\ProductResource;
 use App\Models\Product;
 use Illuminate\Contracts\Routing\ResponseFactory;
@@ -10,8 +11,6 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Http\Response;
-use Illuminate\Support\Facades\Storage;
-use Str;
 
 class ProductController extends Controller
 {
@@ -27,36 +26,20 @@ class ProductController extends Controller
         return new ProductResource(Product::find($id));
     }
 
-    public function store(Request $request): Application|Response|JsonResponse|ResponseFactory
+    public function store(ProductCreateRequest $request): JsonResponse
     {
-        $validated = $request->validate([
-            'title' => 'required',
-            'description' => 'required',
-            'price' => 'required',
-           'image' => 'required|image'
-        ]);
+        $product = Product::create($request->only('title', 'description', 'price', 'image'));
 
-        if($file = $request->file('image')){
-            $name = Str::random(10);
-            $url = $file->storeAs('images', $name . '.' . $file->extension(), 'public');
-            $fullUrl = Storage::url($url);
-        } else {
-            return response(['error' => 'Image upload failed.'], 422);
-        }
-
-        $product = Product::create([
-            'title' => $validated['title'],
-            'description' => $validated['description'],
-            'image' => $fullUrl,
-            'price' => $validated['price'],
-        ]);
-
-        return response(new ProductResource($product), 201);
+        return response()->json(new ProductResource($product), 201);
     }
 
-    public function update($id, Request $request)
+    public function update($id, Request $request): JsonResponse
     {
-        //
+        $product = Product::findOrFail($id);
+
+        $product->update($request->only('title', 'description', 'price', 'image'));
+
+        return response()->json(new ProductResource($product), 200);
     }
 
     public function delete($id): JsonResponse
