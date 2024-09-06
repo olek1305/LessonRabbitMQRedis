@@ -12,8 +12,6 @@ use Gate;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Contracts\Routing\ResponseFactory;
 use Illuminate\Foundation\Application;
-use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
@@ -33,6 +31,9 @@ class UserController extends Controller
         return UserResource::collection($users);
     }
 
+    /**
+     * @throws AuthorizationException
+     */
     public function show(int $id): UserResource
     {
         Gate::authorize('view', 'users');
@@ -42,6 +43,9 @@ class UserController extends Controller
         return new UserResource($user);
     }
 
+    /**
+     * @throws AuthorizationException
+     */
     public function store(UserCreateRequest $request): ResponseFactory|Application|Response
     {
         Gate::authorize('edit', 'users');
@@ -53,6 +57,9 @@ class UserController extends Controller
         return response($user, ResponseAlias::HTTP_ACCEPTED);
     }
 
+    /**
+     * @throws AuthorizationException
+     */
     public function update(UserUpdateRequest $request, int $id): Application|Response|ResponseFactory
     {
         Gate::authorize('edit', 'users');
@@ -64,6 +71,9 @@ class UserController extends Controller
         return response(new UserResource($user), 202);
     }
 
+    /**
+     * @throws AuthorizationException
+     */
     public function destroy(int $id): Application|Response|ResponseFactory
     {
         Gate::authorize('edit', 'users');
