@@ -6,6 +6,7 @@ use App\Http\Resources\OrderResource;
 use App\Models\Order;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Response;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class OrderController extends Controller
 {
@@ -21,7 +22,7 @@ class OrderController extends Controller
         return new OrderResource(Order::findOrFail($id));
     }
 
-    public function export()
+    public function export(): StreamedResponse
     {
         $headers = [
             "Content-Type" => "text/csv",
