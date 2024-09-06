@@ -8,6 +8,8 @@ use App\Http\Requests\UserCreateRequest;
 use App\Http\Requests\UserUpdateRequest;
 use App\Http\Resources\UserResource;
 use App\Models\User;
+use Gate;
+use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Contracts\Routing\ResponseFactory;
 use Illuminate\Foundation\Application;
 use Illuminate\Http\JsonResponse;
@@ -19,8 +21,13 @@ use Symfony\Component\HttpFoundation\Response as ResponseAlias;
 
 class UserController extends Controller
 {
+    /**
+     * @throws AuthorizationException
+     */
     public function index(): AnonymousResourceCollection
     {
+        Gate::authorize('view', 'users');
+
         $users = User::paginate();
 
         return UserResource::collection($users);
@@ -28,6 +35,8 @@ class UserController extends Controller
 
     public function show(int $id): UserResource
     {
+        Gate::authorize('view', 'users');
+
         $user = User::find($id);
 
         return new UserResource($user);
@@ -35,6 +44,8 @@ class UserController extends Controller
 
     public function store(UserCreateRequest $request): ResponseFactory|Application|Response
     {
+        Gate::authorize('edit', 'users');
+
         $user = User::create($request->only('first_name', 'last_name', 'email', 'role_id') + [
             'password' => bcrypt($request->input('password')),
         ]);
@@ -44,6 +55,8 @@ class UserController extends Controller
 
     public function update(UserUpdateRequest $request, int $id): Application|Response|ResponseFactory
     {
+        Gate::authorize('edit', 'users');
+
         $user = User::findOrFail($id);
 
         $user->update($request->only('first_name', 'last_name', 'email', 'role_id'));
@@ -53,6 +66,8 @@ class UserController extends Controller
 
     public function destroy(int $id): Application|Response|ResponseFactory
     {
+        Gate::authorize('edit', 'users');
+
         User::destroy($id);
 
         return response(null, ResponseAlias::HTTP_NO_CONTENT);
