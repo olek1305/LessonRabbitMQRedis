@@ -5,7 +5,8 @@ namespace App\Http\Controllers;
 use App\Http\Resources\RoleResource;
 use App\Models\Role;
 use DB;
-use Illuminate\Database\Eloquent\Collection;
+use Gate;
+use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -17,9 +18,12 @@ class RoleController extends Controller
      * Display a listing of the resource.
      *
      * @return AnonymousResourceCollection The collection of roles.
+     * @throws AuthorizationException
      */
     public function index(): AnonymousResourceCollection
     {
+        Gate::authorize('view', 'users');
+
         return RoleResource::collection(Role::all());
     }
 
@@ -28,9 +32,12 @@ class RoleController extends Controller
      *
      * @param Request $request The request containing role data.
      * @return JsonResponse The response with the created role.
+     * @throws AuthorizationException
      */
     public function store(Request $request): JsonResponse
     {
+        Gate::authorize('edit', 'users');
+
         $role = Role::create($request->only('name'));
 
         if ($permissions = $request->input('permissions')) {
@@ -47,9 +54,12 @@ class RoleController extends Controller
      * @return RoleResource The role with the specified ID.
      *
      * @throws ModelNotFoundException
+     * @throws AuthorizationException
      */
     public function show(string $id): RoleResource
     {
+        Gate::authorize('view', 'users');
+
         return new RoleResource(Role::findOrFail($id));
     }
 
@@ -61,9 +71,12 @@ class RoleController extends Controller
      * @return JsonResponse The response with the updated role.
      *
      * @throws ModelNotFoundException
+     * @throws AuthorizationException
      */
     public function update(Request $request, string $id): JsonResponse
     {
+        Gate::authorize('edit', 'users');
+
         $role = Role::findOrFail($id);
 
         $role->update($request->only('name'));
@@ -83,9 +96,12 @@ class RoleController extends Controller
      *
      * @param string $id The ID of the role to delete.
      * @return JsonResponse The response indicating successful deletion.
+     * @throws AuthorizationException
      */
     public function destroy(string $id): JsonResponse
     {
+        Gate::authorize('edit', 'users');
+
         DB::table('role_permission')->where('role_id', $id)->delete();
 
         $role = Role::findOrFail($id);

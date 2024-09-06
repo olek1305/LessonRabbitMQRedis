@@ -4,26 +4,46 @@ namespace App\Http\Controllers;
 
 use App\Http\Resources\OrderResource;
 use App\Models\Order;
+use Gate;
+use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Response;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class OrderController extends Controller
 {
+    /**
+     * @throws AuthorizationException
+     */
     public function index(): AnonymousResourceCollection
     {
+        Gate::authorize('view', 'users');
+
         $order = Order::paginate();
 
         return OrderResource::collection($order);
     }
 
+    /**
+     * @throws AuthorizationException
+     */
     public function show($id)
     {
+        Gate::authorize('view', 'users');
+
         return new OrderResource(Order::findOrFail($id));
     }
 
+    /**
+     * Export the orders to a CSV file and stream it for download.
+     *
+     * @throws AuthorizationException if the user is not authorized to view orders.
+     * @return StreamedResponse
+     */
     public function export(): StreamedResponse
     {
+        Gate::authorize('view', 'users');
+
         $headers = [
             "Content-Type" => "text/csv",
             "Content-Disposition" => "attachment; filename=\"orders.csv\"",
