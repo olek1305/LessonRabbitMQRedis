@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
- *
+ * 
  *
  * @method static \Illuminate\Database\Eloquent\Builder|Order newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Order newQuery()
@@ -28,6 +28,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @method static \Illuminate\Database\Eloquent\Builder|Order whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Order whereLastName($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Order whereUpdatedAt($value)
+ * @property-read string $name
  * @mixin \Eloquent
  */
 class Order extends Model
