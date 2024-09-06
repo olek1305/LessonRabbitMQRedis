@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\RegisterRequest;
 use App\Models\User;
+use Cookie;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -26,15 +27,29 @@ class AuthController extends Controller
             $tokenResult = $user->createToken('admin');
             $token = $tokenResult->accessToken;
 
+            $cookie = cookie('jwt', $token, 60 * 24);
+
             return response()->json([
                 'token' => $token,
                 'token_type' => 'Bearer',
                 'expires_at' => $tokenResult->token->expires_at,
-            ]);
+            ])->withCookie($cookie);
         }
 
         // Failed login attempt
         return response()->json(['message' => 'Invalid Credentials!'], Response::HTTP_UNAUTHORIZED);
+    }
+
+    public function logout(): JsonResponse
+    {
+        $user = Auth::user();
+        $user->token()->revoke();
+
+        $cookie = cookie::forget('jwt');
+
+        return \response()->json([
+            'message' => 'Logged out successfully!'
+        ])->withCookie($cookie);
     }
 
     public function register(RegisterRequest $request): JsonResponse
