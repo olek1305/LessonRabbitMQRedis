@@ -9,7 +9,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
 /**
- * 
+ *
  *
  * @property int $id
  * @property string $first_name
@@ -85,6 +85,6 @@ class User extends Authenticatable
 
     public function permissions()
     {
-        return $this->role->permissions;
+        return $this->role->permissions->pluck('name');
     }
 }
