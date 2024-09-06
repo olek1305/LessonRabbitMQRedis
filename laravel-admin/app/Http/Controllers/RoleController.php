@@ -2,21 +2,25 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\RoleResource;
 use App\Models\Role;
+use DB;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
 class RoleController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
-     * @return Collection<Role> The collection of roles.
+     * @return AnonymousResourceCollection The collection of roles.
      */
-    public function index(): Collection
+    public function index(): AnonymousResourceCollection
     {
-        return Role::all();
+        return RoleResource::collection(Role::all());
     }
 
     /**
@@ -29,20 +33,24 @@ class RoleController extends Controller
     {
         $role = Role::create($request->only('name'));
 
-        return response()->json($role, 201);
+        if ($permissions = $request->input('permissions')) {
+            $role->permissions()->sync($permissions);
+        }
+
+        return response()->json(new RoleResource($role), 201);
     }
 
     /**
      * Display the specified resource.
      *
      * @param string $id The ID of the role to display.
-     * @return Role The role with the specified ID.
+     * @return RoleResource The role with the specified ID.
      *
-     * @throws \Illuminate\Database\Eloquent\ModelNotFoundException
+     * @throws ModelNotFoundException
      */
-    public function show(string $id): Role
+    public function show(string $id): RoleResource
     {
-        return Role::findOrFail($id);
+        return new RoleResource(Role::findOrFail($id));
     }
 
     /**
@@ -52,7 +60,7 @@ class RoleController extends Controller
      * @param string $id The ID of the role to update.
      * @return JsonResponse The response with the updated role.
      *
-     * @throws \Illuminate\Database\Eloquent\ModelNotFoundException
+     * @throws ModelNotFoundException
      */
     public function update(Request $request, string $id): JsonResponse
     {
@@ -60,7 +68,14 @@ class RoleController extends Controller
 
         $role->update($request->only('name'));
 
-        return response()->json($role, 202);
+        DB::table('role_permission')->where('role_id', $role->id)->delete();
+
+
+        if ($permissions = $request->input('permissions')) {
+            $role->permissions()->sync($permissions);
+        }
+
+        return response()->json(new RoleResource(($role), 202));
     }
 
     /**
@@ -71,11 +86,15 @@ class RoleController extends Controller
      */
     public function destroy(string $id): JsonResponse
     {
-        Role::destroy($id);
+        DB::table('role_permission')->where('role_id', $id)->delete();
+
+        $role = Role::findOrFail($id);
+
+        $role->delete();
 
         return response()->json([
             'message' => 'Role got deleted',
-            'id' => $id
+            'role' => new RoleResource($role)
         ], 200);
     }
 }
