@@ -60,7 +60,7 @@ class AuthController extends Controller
             'last_name' => $request->last_name,
             'email' => $request->email,
             'password' => bcrypt($request->password),
-            'role_id' => 1
+            'role_id' => 3 //Viewer
         ]);
 
         // Generating a token using Passport
