@@ -30,8 +30,8 @@ class AppServiceProvider extends ServiceProvider
             return $user->hasAccess("view_{$model}") || $user->hasAccess("edit_{$model}");
         });
 
-        Gate::define('edit ', function(User $user, $model) {
-            return $user->hasAccess("edit{$model}");
+        Gate::define('edit', function(User $user, $model) {
+            return $user->hasAccess("edit_{$model}");
         });
     }
 }
