@@ -15,7 +15,6 @@ use Illuminate\Foundation\Application;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
-use Symfony\Component\HttpFoundation\Response as ResponseAlias;
 
 class UserController extends Controller
 {
@@ -54,7 +53,7 @@ class UserController extends Controller
             'password' => bcrypt($request->input('password')),
         ]);
 
-        return response($user, ResponseAlias::HTTP_ACCEPTED);
+        return response($user, 202);
     }
 
     /**
@@ -80,7 +79,7 @@ class UserController extends Controller
 
         User::destroy($id);
 
-        return response(null, ResponseAlias::HTTP_NO_CONTENT);
+        return response(null, 202);
     }
 
     public function user(): UserResource
@@ -100,7 +99,7 @@ class UserController extends Controller
 
         $user->update($request->only('first_name', 'last_name', 'email'));
 
-        return response(new UserResource($user), ResponseAlias::HTTP_ACCEPTED);
+        return response(new UserResource($user), 202);
     }
 
     public function updatePassword(UpdatePasswordRequest $request): Application|Response|ResponseFactory
@@ -109,6 +108,6 @@ class UserController extends Controller
 
         $user->update($request->only('password'));
 
-        return response(new UserResource($user), ResponseAlias::HTTP_ACCEPTED);
+        return response(new UserResource($user), 202);
     }
 }
