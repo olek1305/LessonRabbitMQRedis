@@ -59,11 +59,9 @@ class UserController extends Controller
     /**
      * @throws AuthorizationException
      */
-    public function update(UserUpdateRequest $request, int $id): Application|Response|ResponseFactory
+    public function update(UserUpdateRequest $request, User $user): Application|Response|ResponseFactory
     {
         Gate::authorize('edit', 'users');
-
-        $user = User::findOrFail($id);
 
         $user->update($request->only('first_name', 'last_name', 'email', 'role_id'));
 
