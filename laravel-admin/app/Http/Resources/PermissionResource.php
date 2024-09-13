@@ -17,10 +17,13 @@ class PermissionResource extends JsonResource
         return [
             'id' => $this->id,
             'name' => $this->name,
-            'pivot' => [
-                'role_id' => $this->pivot->role_id,
-                'permission_id' => $this->pivot->permission_id,
-            ],
+            // Only include pivot if it exists
+            'pivot' => $this->when($this->pivot, [
+                'role_id' => $this->pivot->role_id ?? null,
+                'permission_id' => $this->pivot->permission_id ?? null,
+            ]),
         ];
     }
+
+
 }
