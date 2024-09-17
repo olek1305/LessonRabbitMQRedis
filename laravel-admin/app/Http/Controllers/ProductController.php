@@ -7,12 +7,9 @@ use App\Http\Resources\ProductResource;
 use App\Models\Product;
 use Gate;
 use Illuminate\Auth\Access\AuthorizationException;
-use Illuminate\Contracts\Routing\ResponseFactory;
-use Illuminate\Foundation\Application;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
-use Illuminate\Http\Response;
 
 class ProductController extends Controller
 {
@@ -67,7 +64,7 @@ class ProductController extends Controller
     /**
      * @throws AuthorizationException
      */
-    public function delete($id): JsonResponse
+    public function destroy($id): JsonResponse
     {
         Gate::authorize('edit', 'users');
 
