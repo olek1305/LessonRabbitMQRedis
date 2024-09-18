@@ -22,7 +22,9 @@ class UpdateInfoRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'email' => 'required|email|max:255|unique:users',
+            'email' => [
+                'required', 'email', 'max:255', 'unique:users,email,' . $this->user()->id,
+            ],
         ];
     }
 }
