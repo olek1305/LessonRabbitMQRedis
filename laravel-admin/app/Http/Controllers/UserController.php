@@ -104,7 +104,9 @@ class UserController extends Controller
     {
         $user = Auth::user();
 
-        $user->update($request->only('password'));
+        $user->update([
+            'password' => bcrypt($request->password),
+        ]);
 
         return response(new UserResource($user), 202);
     }
