@@ -22,6 +22,7 @@ class PermissionSeeder extends Seeder
             ['name' => 'edit_products'],
             ['name' => 'view_orders'],
             ['name' => 'edit_orders'],
+            ['name' => 'view_dashboard'],
         ]);
     }
 }
