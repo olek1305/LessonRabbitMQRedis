@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\Route;
 Route::post('login', [AuthController::class, 'login']);
 Route::post('register', [AuthController::class, 'register']);
 
-Route::group(['middleware' => 'auth:api'], function () {
+Route::group(['middleware' => 'auth:api', 'prefix' => 'admin'], function () {
     Route::post('logout', [AuthController::class, 'logout']);
 
     Route::get('chart', [DashboardController::class, 'chart']);
