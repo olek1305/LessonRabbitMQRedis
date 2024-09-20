@@ -1,0 +1,32 @@
+name: laravel-app
+
+services:
+    app:
+        build:
+            context: .
+            dockerfile: Dockerfile
+        ports:
+            - "8000:8000"
+        volumes:
+            - .:/var/www
+        environment:
+            - APP_ENV=local
+            - APP_DEBUG=true
+        working_dir: /var/www
+        command: php artisan serve --host=0.0.0.0 --port=8000
+
+    # Opcjonalnie: baza danych MySQL
+    db:
+        image: mysql:8.0
+        environment:
+            MYSQL_ROOT_PASSWORD: root
+            MYSQL_DATABASE: laravel
+            MYSQL_USER: user
+            MYSQL_PASSWORD: password
+        ports:
+            - "3306:3306"
+        volumes:
+            - db_data:/var/lib/mysql
+
+volumes:
+    db_data:
