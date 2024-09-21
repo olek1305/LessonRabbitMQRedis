@@ -2,6 +2,7 @@ name: laravel-app
 
 services:
     app:
+        container_name: app
         build:
             context: .
             dockerfile: Dockerfile
