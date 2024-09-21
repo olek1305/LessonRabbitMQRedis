@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\Admin\Controller;
 use App\Http\Requests\RegisterRequest;
 use App\Models\User;
 use Cookie;

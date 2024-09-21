@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Admin;
 
 use App\Http\Requests\ImageUploadRequest;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Storage;
 use Str;
 
-class ImageController extends Controller
+class ImageController
 {
     public function upload(ImageUploadRequest $request): JsonResponse
     {

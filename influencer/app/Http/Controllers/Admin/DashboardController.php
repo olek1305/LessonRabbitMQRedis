@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Admin;
 
 use App\Http\Resources\ChartResource;
 use App\Models\Order;
@@ -8,7 +8,7 @@ use Gate;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
-class DashboardController extends Controller
+class DashboardController
 {
     /**
      * Display a chart of total order values grouped by date.
