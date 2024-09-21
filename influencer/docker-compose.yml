@@ -7,6 +7,9 @@ services:
             dockerfile: Dockerfile
         ports:
             - "8003:8000"
+        depends_on:
+            - influencer_db
+            - redis
         volumes:
             - .:/var/www
         environment:
@@ -16,17 +19,17 @@ services:
             - SESSION_DRIVER=redis
             - REDIS_HOST=redis
         working_dir: /var/www
-        command: php artisan serve --host=0.0.0.0 --port=8000
+        command: php artisan serve --host=0.0.0.0
 
-    db:
+    influencer_db:
         image: mysql:8.0
         environment:
             MYSQL_ROOT_PASSWORD: root
-            MYSQL_DATABASE: influencer_db
-            MYSQL_USER: influencer
+            MYSQL_DATABASE: influencer_database
+            MYSQL_USER: influencer_user
             MYSQL_PASSWORD: password
         ports:
-            - "3306:3306"
+            - "33070:3306"
         volumes:
             - db_data:/var/lib/mysql
 
