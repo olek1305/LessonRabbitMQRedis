@@ -4,9 +4,10 @@ use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\ImageController;
 use App\Http\Controllers\Admin\OrderController;
 use App\Http\Controllers\Admin\PermissionController;
-use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\Admin\ProductController as AdminProductController;
+use App\Http\Controllers\Influencer\ProductController as InfluencerProductController;
 use App\Http\Controllers\AuthController;
 use Illuminate\Support\Facades\Route;
 
@@ -25,9 +26,13 @@ Route::group(['middleware' => 'auth:api', 'prefix' => 'admin', 'namespace' => 'A
 
     Route::apiResource('users', UserController::class);
     Route::apiResource('roles', RoleController::class);
-    Route::apiResource('products', ProductController::class);
+    Route::apiResource('products', AdminProductController::class);
     Route::apiResource('orders', OrderController::class)->only(['index', 'show']);
     Route::apiResource('permissions', PermissionController::class)->only(['index']);
+});
+
+Route::group(['prefix' => 'influencer', 'namespace' => 'Influencer'], function () {
+    Route::get('products', [InfluencerProductController::class, 'index']);
 });
 
 
