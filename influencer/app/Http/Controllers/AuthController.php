@@ -4,8 +4,13 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Admin\Controller;
 use App\Http\Requests\RegisterRequest;
+use App\Http\Requests\UpdateInfoRequest;
+use App\Http\Requests\UpdatePasswordRequest;
+use App\Http\Resources\UserResource;
 use App\Models\User;
 use Cookie;
+use Illuminate\Contracts\Routing\ResponseFactory;
+use Illuminate\Foundation\Application;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -61,7 +66,8 @@ class AuthController extends Controller
             'last_name' => $request->last_name,
             'email' => $request->email,
             'password' => bcrypt($request->password),
-            'role_id' => 3 //Viewer
+            'role_id' => 1, // Admin
+            'is_influencer' => 1
         ]);
 
         // Generating a token using Passport
@@ -77,4 +83,40 @@ class AuthController extends Controller
         ], Response::HTTP_CREATED);
     }
 
+    public function user(): UserResource
+    {
+        $user = Auth::user();
+
+        $resource = new UserResource($user);
+
+        if($user->isInfluencer()) {
+            return $resource;
+        }
+
+        return (new UserResource($user))->additional([
+            'data' => [
+                'permissions' => $user->permissions()
+            ]
+        ]);
+    }
+
+    public function updateInfo(UpdateInfoRequest $request): Application|\Illuminate\Http\Response|ResponseFactory
+    {
+        $user = Auth::user();
+
+        $user->update($request->only('first_name', 'last_name', 'email'));
+
+        return response(new UserResource($user), 202);
+    }
+
+    public function updatePassword(UpdatePasswordRequest $request): Application|Response|ResponseFactory
+    {
+        $user = Auth::user();
+
+        $user->update([
+            'password' => bcrypt($request->password),
+        ]);
+
+        return response(new UserResource($user), 202);
+    }
 }

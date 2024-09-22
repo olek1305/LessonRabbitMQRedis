@@ -79,35 +79,4 @@ class UserController
 
         return response(null, 202);
     }
-
-    public function user(): UserResource
-    {
-        $user = Auth::user();
-
-        return (new UserResource($user))->additional([
-            'data' => [
-                'permissions' => $user->permissions()
-            ]
-        ]);
-    }
-
-    public function updateInfo(UpdateInfoRequest $request): Application|Response|ResponseFactory
-    {
-        $user = Auth::user();
-
-        $user->update($request->only('first_name', 'last_name', 'email'));
-
-        return response(new UserResource($user), 202);
-    }
-
-    public function updatePassword(UpdatePasswordRequest $request): Application|Response|ResponseFactory
-    {
-        $user = Auth::user();
-
-        $user->update([
-            'password' => bcrypt($request->password),
-        ]);
-
-        return response(new UserResource($user), 202);
-    }
 }
