@@ -16,16 +16,15 @@ Route::post('login', [AuthController::class, 'login']);
 Route::post('register', [AuthController::class, 'register']);
 
 Route::group(['middleware' => 'auth:api'], function () {
+    Route::post('logout', [AuthController::class, 'logout']);
     Route::get('user', [AuthController::class, 'user']);
     Route::put('users/info', [AuthController::class, 'updateInfo']);
     Route::put('users/password', [AuthController::class, 'updatePassword']);
 });
 
-
 // Admin
-Route::group(['middleware' => 'auth:api', 'prefix' => 'admin', 'namespace' => 'Admin'], function () {
+Route::group(['middleware' => ['auth:api', 'scope:admin'], 'prefix' => 'admin'], function () {
     Route::post('logout', [AuthController::class, 'logout']);
-
     Route::get('chart', [DashboardController::class, 'chart']);
     Route::post('upload', [ImageController::class, 'upload']);
     Route::get('export', [OrderController::class, 'export']);
@@ -37,8 +36,13 @@ Route::group(['middleware' => 'auth:api', 'prefix' => 'admin', 'namespace' => 'A
 });
 
 // Influencer
-Route::group(['prefix' => 'influencer', 'namespace' => 'Influencer'], function () {
+Route::group(['prefix' => 'influencer'], function () {
     Route::get('products', [InfluencerProductController::class, 'index']);
+
+    Route::group(['middleware' => ['auth:api', 'scope:influencer']], function () {
+
+    });
 });
+
 
 

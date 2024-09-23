@@ -18,32 +18,30 @@ use Symfony\Component\HttpFoundation\Response;
 
 class AuthController extends Controller
 {
-    public function login(Request $request): JsonResponse
+    public function login(Request $request)
     {
-        $credentials = $request->validate([
-            'email' => 'required|email',
-            'password' => 'required|string',
-        ]);
-
-        // User login attempt
-        if (Auth::attempt($credentials)) {
+        if (Auth::attempt($request->only('email', 'password'))) {
             $user = Auth::user();
+            $scope = $request->input('scope');
 
-            // Creating a token with Passport
-            $tokenResult = $user->createToken('admin');
-            $token = $tokenResult->accessToken;
+            if (!$request->user()->tokenCan('admin')) {
+                return response([
+                    'error' => 'Access denied!',
+                ], Response::HTTP_FORBIDDEN);
+            }
 
-            $cookie = cookie('jwt', $token, 60 * 24);
+            $token = $user->createToken($scope, [$scope])->accessToken;
 
-            return response()->json([
+            $cookie = \cookie('jwt', $token, 3600);
+
+            return \response([
                 'token' => $token,
-                'token_type' => 'Bearer',
-                'expires_at' => $tokenResult->token->expires_at,
             ])->withCookie($cookie);
         }
 
-        // Failed login attempt
-        return response()->json(['message' => 'Invalid Credentials!'], Response::HTTP_UNAUTHORIZED);
+        return response([
+            'error' => 'Invalid Credentials!',
+        ], Response::HTTP_UNAUTHORIZED);
     }
 
     public function logout(): JsonResponse

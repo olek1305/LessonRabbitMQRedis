@@ -33,5 +33,10 @@ class AppServiceProvider extends ServiceProvider
         Gate::define('edit', function(User $user, $model) {
             return $user->hasAccess("edit_{$model}");
         });
+
+        Passport::tokensCan([
+            'admin' => 'Administrator Scope',
+            'influencer' => 'Influencer Scope',
+        ]);
     }
 }
