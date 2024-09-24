@@ -7,6 +7,7 @@ use App\Http\Controllers\Admin\PermissionController;
 use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\ProductController as AdminProductController;
+use App\Http\Controllers\Influencer\LinkController;
 use App\Http\Controllers\Influencer\ProductController as InfluencerProductController;
 use App\Http\Controllers\AuthController;
 use Illuminate\Support\Facades\Route;
@@ -40,7 +41,7 @@ Route::group(['prefix' => 'influencer'], function () {
     Route::get('products', [InfluencerProductController::class, 'index']);
 
     Route::group(['middleware' => ['auth:api', 'scope:influencer']], function () {
-
+        Route::post('links', [LinkController::class, 'store']);
     });
 });
 
