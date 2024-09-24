@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\Influencer;
 
-use App\Http\Resources\LinkRequest;
 use App\Http\Resources\LinkResource;
 use App\Models\Link;
 use App\Models\LinkProduct;
