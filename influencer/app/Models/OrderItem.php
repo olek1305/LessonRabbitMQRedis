@@ -28,6 +28,10 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @method static \Illuminate\Database\Eloquent\Builder|OrderItem whereProductTitle($value)
  * @method static \Illuminate\Database\Eloquent\Builder|OrderItem whereQuantity($value)
  * @method static \Illuminate\Database\Eloquent\Builder|OrderItem whereUpdatedAt($value)
+ * @property string $influencer_revenue
+ * @property string $admin_revenue
+ * @method static \Illuminate\Database\Eloquent\Builder|OrderItem whereAdminRevenue($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|OrderItem whereInfluencerRevenue($value)
  * @mixin \Eloquent
  */
 class OrderItem extends Model
