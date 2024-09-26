@@ -51,5 +51,6 @@ Route::group(['prefix' => 'influencer'], function () {
 Route::group(['prefix' => 'checkout'], function () {
     Route::get('links/{code}', [CheckoutLinkController::class, 'show']);
     Route::post('orders', [CheckoutOrderController::class, 'store']);
+    Route::post('orders/confirm', [CheckoutOrderController::class, 'confirm']);
 });
 

@@ -7,6 +7,7 @@ use App\Models\Order;
 use App\Models\OrderItem;
 use App\Models\Product;
 use Cartalyst\Stripe\Stripe;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class OrderController
@@ -81,5 +82,21 @@ class OrderController
         }
 
         return $order;
+    }
+
+    public function confirm(Request $request): JsonResponse
+    {
+        if(!$order = Order::whereTransactionId($request->input('source'))->first()) {
+            return response()->json([
+                'error' => 'Order not found'
+            ], 404);
+        }
+
+        $order->completed = true;
+        $order->save();
+
+        return response()->json([
+            'message' => 'success'
+        ]);
     }
 }
