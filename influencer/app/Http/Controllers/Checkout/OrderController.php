@@ -9,13 +9,14 @@ use App\Models\Product;
 use Cartalyst\Stripe\Stripe;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Mail\Message;
 
 class OrderController
 {
     /**
      * @throws \Throwable
      */
-    public function store(Request $request)
+    public function store(Request $request): Order
     {
         $link = Link::whereCode($request->input('code'))->first();
 
@@ -92,8 +93,18 @@ class OrderController
             ], 404);
         }
 
-        $order->completed = true;
+        $order->complete = 1;
         $order->save();
+
+        \Mail::send('influencer.admin', ['order' => $order], function(Message $message) {
+            $message->to('admin@admin.com');
+            $message->subject('a new order has been completed!');
+        });
+
+        \Mail::send('influencer.influencer', ['order' => $order], function(Message $message) use ($order) {
+            $message->to($order->influencer_email);
+            $message->subject('a new order has been completed!');
+        });
 
         return response()->json([
             'message' => 'success'

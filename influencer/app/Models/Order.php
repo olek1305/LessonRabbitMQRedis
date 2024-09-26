@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
- * 
+ *
  *
  * @method static \Illuminate\Database\Eloquent\Builder|Order newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Order newQuery()
@@ -60,10 +60,17 @@ class Order extends Model
         return $this->hasMany(OrderItem::class);
     }
 
-    public function getTotalAttribute(): float
+    public function getAdminTotalAttribute(): float
     {
         return $this->orderItems->sum(function(OrderItem $item) {
-            return $item->price * $item->quantity;
+            return $item->admin_revenue;
+        });
+    }
+
+    public function getInfluencerTotalAttribute(): float
+    {
+        return $this->orderItems->sum(function(OrderItem $item) {
+            return $item->influencer_revenue;
         });
     }
 
