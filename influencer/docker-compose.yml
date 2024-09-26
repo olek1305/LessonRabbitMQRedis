@@ -11,6 +11,7 @@ services:
         depends_on:
             - influencer_db
             - redis
+            - mailcatcher
         volumes:
             - .:/var/www
         environment:
@@ -19,6 +20,12 @@ services:
             - CACHE_DRIVER=redis
             - SESSION_DRIVER=redis
             - REDIS_HOST=redis
+            - MAIL_MAILER=smtp
+            - MAIL_HOST=mailcatcher
+            - MAIL_PORT=1025
+            - MAIL_USERNAME=null
+            - MAIL_PASSWORD=null
+            - MAIL_ENCRYPTION=null
         working_dir: /var/www
         command: php artisan serve --host=0.0.0.0
 
@@ -40,6 +47,13 @@ services:
             - "6379:6379"
         volumes:
             - redis_data:/data
+
+
+    mailcatcher:
+        image: schickling/mailcatcher
+        ports:
+            - "1080:1080"   # Web interface
+            - "1025:1025"   # SMTP port
 
 volumes:
     db_data:
