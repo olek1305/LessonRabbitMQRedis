@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Checkout;
 
+use App\Events\OrderCompletedEvent;
 use App\Models\Link;
 use App\Models\Order;
 use App\Models\OrderItem;
@@ -9,7 +10,6 @@ use App\Models\Product;
 use Cartalyst\Stripe\Stripe;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Mail\Message;
 
 class OrderController
 {
@@ -96,15 +96,7 @@ class OrderController
         $order->complete = 1;
         $order->save();
 
-        \Mail::send('influencer.admin', ['order' => $order], function(Message $message) {
-            $message->to('admin@admin.com');
-            $message->subject('a new order has been completed!');
-        });
-
-        \Mail::send('influencer.influencer', ['order' => $order], function(Message $message) use ($order) {
-            $message->to($order->influencer_email);
-            $message->subject('a new order has been completed!');
-        });
+        event(new OrderCompletedEvent($order));
 
         return response()->json([
             'message' => 'success'

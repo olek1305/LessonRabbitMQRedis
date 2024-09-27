@@ -2,8 +2,14 @@
 
 namespace App\Providers;
 
+use App\Events\AdminAddedEvent;
+use App\Events\OrderCompletedEvent;
+use App\Listeners\NotifyAddedAdminListener;
+use App\Listeners\NotifyAdminListener;
+use App\Listeners\NotifyInfluencerListener;
 use App\Models\User;
 use Gate;
+use Illuminate\Support\Facades\Event;
 use Laravel\Passport\Passport;
 use Illuminate\Support\ServiceProvider;
 
@@ -38,5 +44,15 @@ class AppServiceProvider extends ServiceProvider
             'admin' => 'Administrator Scope',
             'influencer' => 'Influencer Scope',
         ]);
+
+        Event::listen(
+            OrderCompletedEvent::class,
+            [NotifyAdminListener::class, NotifyInfluencerListener::class],
+        );
+
+        Event::listen(
+            AdminAddedEvent::class,
+            NotifyAddedAdminListener::class
+        );
     }
 }
