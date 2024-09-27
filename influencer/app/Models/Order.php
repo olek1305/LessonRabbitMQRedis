@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
- *
+ * 
  *
  * @method static \Illuminate\Database\Eloquent\Builder|Order newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Order newQuery()
@@ -49,6 +49,8 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @method static \Illuminate\Database\Eloquent\Builder|Order whereZip($value)
  * @property string|null $transaction_id
  * @method static \Illuminate\Database\Eloquent\Builder|Order whereTransactionId($value)
+ * @property-read float $admin_total
+ * @property-read float $influencer_total
  * @mixin \Eloquent
  */
 class Order extends Model

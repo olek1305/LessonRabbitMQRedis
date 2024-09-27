@@ -12,7 +12,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
 /**
- * 
+ *
  *
  * @property int $id
  * @property string $first_name
@@ -47,6 +47,7 @@ use Illuminate\Notifications\Notifiable;
  * @method static \Illuminate\Database\Eloquent\Builder|User whereRoleId($value)
  * @property int $is_influencer
  * @method static \Illuminate\Database\Eloquent\Builder|User whereIsInfluencer($value)
+ * @property-read mixed $revenue
  * @mixin \Eloquent
  */
 class User extends Authenticatable
@@ -106,5 +107,14 @@ class User extends Authenticatable
     public function isInfluencer(): bool
     {
         return $this->is_influencer === 1;
+    }
+
+    public function getRevenueAttribute(): float
+    {
+        $orders = Order::where('user_id', $this->id)->where('complete', 1)->get();
+
+        return $orders->sum(function (Order $order) {
+            return $order->influencer_total;
+        });
     }
 }
