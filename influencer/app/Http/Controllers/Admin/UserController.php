@@ -57,7 +57,7 @@ class UserController
             'role_id' => $request->input('role_id'),
         ]);
 
-        event(new AdminAddedEvent($user));
+//        event(new AdminAddedEvent($user));
 
         return response($user, 202);
     }
