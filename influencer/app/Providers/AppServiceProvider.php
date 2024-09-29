@@ -9,6 +9,7 @@ use App\Listeners\NotifyAddedAdminListener;
 use App\Listeners\NotifyAdminListener;
 use App\Listeners\NotifyInfluencerListener;
 use App\Listeners\ProductCacheFlush;
+use App\Listeners\UpdateRankingsListener;
 use App\Models\User;
 use Gate;
 use Illuminate\Support\Facades\Event;
@@ -49,7 +50,7 @@ class AppServiceProvider extends ServiceProvider
 
         Event::listen(
             OrderCompletedEvent::class,
-            [NotifyAdminListener::class, NotifyInfluencerListener::class],
+            [NotifyAdminListener::class, NotifyInfluencerListener::class, UpdateRankingsListener::class],
         );
 
         Event::listen(
