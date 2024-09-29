@@ -5,19 +5,21 @@ namespace App\Http\Controllers\Influencer;
 use App\Http\Resources\ProductResource;
 use App\Models\Product;
 use Illuminate\Http\Request;
-use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
 class ProductController
 {
-    public function index(Request $request): AnonymousResourceCollection
+    public function index(Request $request)
     {
-        $query = Product::query();
+        return \Cache::remember('products', 5, function() use($request) {
+            sleep(2);
+            $query = Product::query();
 
-        if ($s = $request->input('s')) {
-            $query->whereRaw("title LIKE '%{$s}%'")
-                ->orWhereRaw("description LIKE '%{$s}%'");
-        }
+            if ($s = $request->input('s')) {
+                $query->whereRaw("title LIKE '%{$s}%'")
+                    ->orWhereRaw("description LIKE '%{$s}%'");
+            }
 
-        return ProductResource::collection($query->get());
+            return ProductResource::collection($query->get());
+        });
     }
 }
