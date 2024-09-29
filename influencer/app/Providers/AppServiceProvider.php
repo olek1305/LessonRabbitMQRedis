@@ -4,9 +4,11 @@ namespace App\Providers;
 
 use App\Events\AdminAddedEvent;
 use App\Events\OrderCompletedEvent;
+use App\Events\ProductUpdateEvent;
 use App\Listeners\NotifyAddedAdminListener;
 use App\Listeners\NotifyAdminListener;
 use App\Listeners\NotifyInfluencerListener;
+use App\Listeners\ProductCacheFlush;
 use App\Models\User;
 use Gate;
 use Illuminate\Support\Facades\Event;
@@ -53,6 +55,11 @@ class AppServiceProvider extends ServiceProvider
         Event::listen(
             AdminAddedEvent::class,
             NotifyAddedAdminListener::class
+        );
+
+        Event::listen(
+            ProductUpdateEvent::class,
+            ProductCacheFlush::class
         );
     }
 }

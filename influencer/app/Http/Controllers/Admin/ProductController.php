@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Events\ProductUpdateEvent;
 use App\Http\Requests\ProductCreateRequest;
 use App\Http\Resources\ProductResource;
 use App\Models\Product;
@@ -44,6 +45,8 @@ class ProductController extends Controller
 
         $product = Product::create($request->only('title', 'description', 'price', 'image'));
 
+        event(new ProductUpdateEvent());
+
         return response()->json(new ProductResource($product), 201);
     }
 
@@ -57,6 +60,8 @@ class ProductController extends Controller
         $product = Product::findOrFail($id);
 
         $product->update($request->only('title', 'description', 'price', 'image'));
+
+        event(new ProductUpdateEvent());
 
         return response()->json(new ProductResource($product), 200);
     }

@@ -10,7 +10,7 @@ class ProductController
 {
     public function index(Request $request)
     {
-        return \Cache::remember('products', 5, function() use($request) {
+        return \Cache::remember('products', 60*30, function() use($request) {
             sleep(2);
             $query = Product::query();
 
