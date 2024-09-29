@@ -4,11 +4,13 @@ namespace App\Http\Controllers\Influencer;
 
 use App\Models\Link;
 use App\Models\Order;
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
 
 class StatsController
 {
-    public function index(Request $request)
+    public function index(Request $request): Collection
     {
         $user = $request->user();
 
@@ -25,5 +27,23 @@ class StatsController
                 })
             ];
         });
+    }
+
+    public function rankings(): Collection
+    {
+        $users = User::where('is_influencer', 1)->get();
+
+        $rankings = $users->map(function (User $user) {
+            $orders = Order::where('user_id', $user->id)->where('complete', 1)->get();
+
+            return [
+                'name' => $user->full_name,
+                'revenue' => $orders->sum(function (Order $order) {
+                    return (int) $order->influencer_total;
+                })
+            ];
+        });
+
+        return $rankings->sortByDesc('revenue')->values();
     }
 }

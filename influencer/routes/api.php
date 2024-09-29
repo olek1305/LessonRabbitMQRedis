@@ -46,6 +46,7 @@ Route::group(['prefix' => 'influencer'], function () {
     Route::group(['middleware' => ['auth:api', 'scope:influencer']], function () {
         Route::post('links', [LinkController::class, 'store']);
         Route::get('stats', [StatsController::class, 'index']);
+        Route::get('rankings', [StatsController::class, 'rankings']);
     });
 });
 

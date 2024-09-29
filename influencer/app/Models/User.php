@@ -12,7 +12,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
 /**
- *
+ * 
  *
  * @property int $id
  * @property string $first_name
@@ -48,6 +48,7 @@ use Illuminate\Notifications\Notifiable;
  * @property int $is_influencer
  * @method static \Illuminate\Database\Eloquent\Builder|User whereIsInfluencer($value)
  * @property-read mixed $revenue
+ * @property-read string $full_name
  * @mixin \Eloquent
  */
 class User extends Authenticatable
@@ -116,5 +117,10 @@ class User extends Authenticatable
         return $orders->sum(function (Order $order) {
             return $order->influencer_total;
         });
+    }
+
+    public function getFullNameAttribute(): string
+    {
+        return $this->first_name . ' ' . $this->last_name;
     }
 }
