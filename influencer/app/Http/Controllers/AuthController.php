@@ -13,6 +13,7 @@ use Illuminate\Contracts\Routing\ResponseFactory;
 use Illuminate\Foundation\Application;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -24,7 +25,7 @@ class AuthController extends Controller
             $user = Auth::user();
             $scope = $request->input('scope');
 
-            if (!$request->user()->tokenCan('admin')) {
+            if ($user->isInfluencer() && $scope !== 'influencer') {
                 return response([
                     'error' => 'Access denied!',
                 ], Response::HTTP_FORBIDDEN);
@@ -32,10 +33,30 @@ class AuthController extends Controller
 
             $token = $user->createToken($scope, [$scope])->accessToken;
 
-            $cookie = \cookie('jwt', $token, 3600);
+            $expiration = Carbon::now()->addHours(2);
 
-            return \response([
+            // Utworzenie ciasteczka z tokenem
+            $cookie = cookie(
+                'jwt',                      // Nazwa ciasteczka
+                $token,                     // Wartość (token)
+                60 * 24,                    // Czas trwania w minutach (1 dzień)
+                '/',                        // Ścieżka (root)
+                'localhost',                // Domena lokalna
+                false,                      // Secure = false, bo nie używasz HTTPS
+                true,                       // HttpOnly
+                false,                      // HTTPS nie jest wymagany
+                'Lax'                       // SameSite ustawione na 'Lax'
+            );
+
+            return response([
                 'token' => $token,
+                'user' => [
+                    'id' => $user->id,
+                    'first_name' => $user->first_name,
+                    'last_name' => $user->last_name,
+                    'email' => $user->email,
+                    'revenue' => $user->revenue
+                ],
             ])->withCookie($cookie);
         }
 
