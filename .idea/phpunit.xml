@@ -3,6 +3,7 @@
   <component name="PHPUnit">
     <option name="directories">
       <list>
+        <option value="$PROJECT_DIR$/influencer/tests" />
         <option value="$PROJECT_DIR$/laravel-admin/tests" />
       </list>
     </option>
