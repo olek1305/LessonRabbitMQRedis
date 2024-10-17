@@ -47,21 +47,20 @@ Route::prefix('admin')->group(function () {
 
 // Influencer
 Route::prefix('influencer')->group(function () {
-    Route::post('login', 'AuthController@login');
-    Route::post('register', 'AuthController@register');
+    Route::post('login', [AuthController::class, 'login']);
+    Route::post('register', [AuthController::class, 'register']);
     Route::get('products', [InfluencerProductController::class, 'index']);
 
     Route::middleware(['auth:api', 'scope:influencer'])->group(function () {
-        Route::post('logout', 'AuthController@logout');
-        Route::get('user', 'AuthController@user');
-        Route::put('users/info', 'AuthController@updateInfo');
-        Route::put('users/password', 'AuthController@updatePassword');
+        Route::post('logout', [AuthController::class, 'logout']);
+        Route::get('user', [AuthController::class, 'user']);
+        Route::put('users/info', [AuthController::class, 'updateInfo']);
+        Route::put('users/password', [AuthController::class, 'updatePassword']);
 
         Route::post('links', [LinkController::class, 'store']);
         Route::get('stats', [StatsController::class, 'index']);
         Route::get('rankings', [StatsController::class, 'rankings']);
     });
-
 });
 
 // Checkout
