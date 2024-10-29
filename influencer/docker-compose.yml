@@ -1,8 +1,6 @@
-name: laravel-app
-
 services:
     app:
-        container_name: app
+        container_name: influencer_app
         build:
             context: .
             dockerfile: Dockerfile
@@ -17,19 +15,11 @@ services:
         environment:
             - APP_ENV=local
             - APP_DEBUG=true
-            - CACHE_DRIVER=redis
-            - SESSION_DRIVER=redis
-            - REDIS_HOST=redis
-            - MAIL_MAILER=smtp
-            - MAIL_HOST=mailcatcher
-            - MAIL_PORT=1025
-            - MAIL_USERNAME=null
-            - MAIL_PASSWORD=null
-            - MAIL_ENCRYPTION=null
         working_dir: /var/www
-        command: php artisan serve --host=0.0.0.0
+        command: php artisan serve
 
     influencer_db:
+        container_name: influencer_db
         image: mysql:8.0
         environment:
             MYSQL_ROOT_PASSWORD: root
@@ -42,6 +32,7 @@ services:
             - db_data:/var/lib/mysql
 
     redis:
+        container_name: influencer_redis
         image: redis:alpine
         ports:
             - "6379:6379"
@@ -50,6 +41,7 @@ services:
 
 
     mailcatcher:
+        container_name: influencer_mailcatcher
         image: schickling/mailcatcher
         ports:
             - "1080:1080"   # Web interface
