@@ -12,7 +12,13 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->dropColumn('role_id');
+            if (Schema::hasColumn('users', 'role_id')) {
+                // Drop the foreign key constraint if it exists
+                $table->dropForeign(['role_id']);
+
+                // Then drop the column
+                $table->dropColumn('role_id');
+            }
         });
     }
 
@@ -22,8 +28,11 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->unsignedBigInteger('role_id')->default(2);
-            $table->foreign('role_id')->references('id')->on('roles');
+            // Check if the column already exists before adding it
+            if (!Schema::hasColumn('users', 'role_id')) {
+                $table->unsignedBigInteger('role_id')->default(2);
+                $table->foreign('role_id')->references('id')->on('roles');
+            }
         });
     }
 };
