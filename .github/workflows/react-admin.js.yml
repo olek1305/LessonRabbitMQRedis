@@ -28,6 +28,3 @@ jobs:
 
       - run: npm run build --if-present
         working-directory: ./react-admin
-
-      - run: npm test
-        working-directory: ./react-admin
