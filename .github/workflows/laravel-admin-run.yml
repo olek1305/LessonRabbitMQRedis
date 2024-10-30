@@ -28,6 +28,11 @@ jobs:
         cd laravel-admin
         php -r "file_exists('.env') || copy('.env.example', '.env');"
 
+    - name: Upgrade curl and openssl
+      run: |
+        sudo apt-get update
+        sudo apt-get install --only-upgrade curl openssl
+
     - name: Update Dependencies
       run: |
         cd laravel-admin
