@@ -15,54 +15,54 @@ jobs:
         php: ['8.2', '8.3']
 
     steps:
-    - name: Setup PHP
-      uses: shivammathur/setup-php@v2
-      with:
-        php-version: ${{ matrix.php }}
-        extensions: dom, curl, libxml, mbstring, zip, pcntl, pdo, sqlite, pdo_sqlite, sodium, sockets
-        coverage: none
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+          extensions: dom, curl, libxml, mbstring, zip, pcntl, pdo, sqlite, pdo_sqlite, sodium, sockets
+          coverage: none
 
-    - uses: actions/checkout@v4
-    - name: Copy .env
-      run: |
-        cd laravel-influencer
-        php -r "file_exists('.env') || copy('.env.example', '.env');"
+      - uses: actions/checkout@v4
+      - name: Copy .env
+        run: |
+          cd laravel-influencer
+          php -r "file_exists('.env') || copy('.env.example', '.env');"
 
-    - name: Update Dependencies
-      run: |
-        cd laravel-influencer
-        composer update --no-ansi --no-interaction --prefer-dist
+      - name: Update Dependencies
+        run: |
+          cd laravel-influencer
+          composer update --no-ansi --no-interaction --prefer-dist
 
-    - name: Install Dependencies
-      run: |
-        cd laravel-influencer
-        composer install -q --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist
+      - name: Install Dependencies
+        run: |
+          cd laravel-influencer
+          composer install -q --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist
 
-    - name: Generate key
-      run: |
-        cd laravel-influencer
-        php artisan key:generate
+      - name: Generate key
+        run: |
+          cd laravel-influencer
+          php artisan key:generate
 
-    - name: Directory Permissions
-      run: |
-        cd laravel-influencer
-        chmod -R 777 storage bootstrap/cache
+      - name: Directory Permissions
+        run: |
+          cd laravel-influencer
+          chmod -R 777 storage bootstrap/cache
 
-    - name: Create Database
-      run: |
-        cd laravel-influencer
-        mkdir -p database
-        touch database/database.sqlite
+      - name: Create Database
+        run: |
+          cd laravel-influencer
+          mkdir -p database
+          touch database/database.sqlite
 
-    - name: Migrate with seeds via sqlite
-      run: |
-        cd laravel-influencer
-        php artisan migrate --seed
+      - name: Migrate with seeds via sqlite
+        run: |
+          cd laravel-influencer
+          php artisan migrate --seed
 
-    - name: Execute tests (Unit and Feature tests) via PHPUnit/Pest
-      env:
-        DB_CONNECTION: sqlite
-        DB_DATABASE: database/database.sqlite
-      run: |
-        cd laravel-influencer
-        php artisan test
+      - name: Execute tests (Unit and Feature tests) via PHPUnit/Pest
+        env:
+          DB_CONNECTION: sqlite
+          DB_DATABASE: database/database.sqlite
+        run: |
+          cd laravel-influencer
+          php artisan test
