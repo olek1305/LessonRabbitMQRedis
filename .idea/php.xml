@@ -277,6 +277,8 @@
       <path value="$PROJECT_DIR$/laravel-admin/vendor/league/oauth2-server" />
       <path value="$PROJECT_DIR$/laravel-admin/vendor/league/event" />
       <path value="$PROJECT_DIR$/laravel-admin/vendor/league/uri" />
+      <path value="$PROJECT_DIR$/influencer/vendor/php-amqplib/php-amqplib" />
+      <path value="$PROJECT_DIR$/influencer/vendor/vladimir-yuldashev/laravel-queue-rabbitmq" />
     </include_path>
   </component>
   <component name="PhpProjectSharedConfiguration" php_language_level="8.2" />
