@@ -54,10 +54,11 @@ jobs:
           mkdir -p database
           touch database/database.sqlite
 
+      #TODO late add --seed
       - name: Migrate with seeds via sqlite
         run: |
           cd laravel-influencer
-          php artisan migrate --seed
+          php artisan migrate
 
       - name: Execute tests (Unit and Feature tests) via PHPUnit/Pest
         env:
