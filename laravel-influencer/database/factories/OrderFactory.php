@@ -20,6 +20,7 @@ class OrderFactory extends Factory
             'first_name' => $this->faker->firstName(),
             'last_name' => $this->faker->lastName(),
             'email' => $this->faker->unique()->safeEmail(),
+            'code' => $this->faker->unique()->numberBetween(1000000, 9999999),
             'created_at' => $this->faker->date(),
         ];
     }
