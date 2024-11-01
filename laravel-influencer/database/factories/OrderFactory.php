@@ -2,6 +2,8 @@
 
 namespace Database\Factories;
 
+use App\Models\Link;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -16,11 +18,15 @@ class OrderFactory extends Factory
      */
     public function definition(): array
     {
+        $link = Link::inRandomOrder()->first() ?? Link::factory()->create();
+
         return [
             'first_name' => $this->faker->firstName(),
             'last_name' => $this->faker->lastName(),
             'email' => $this->faker->unique()->safeEmail(),
+            'influencer_email' => $link->user->email,
             'code' => $this->faker->unique()->numberBetween(1000000, 9999999),
+            'user_id' => $link->user->id,
             'created_at' => $this->faker->date(),
             'updated_at' => $this->faker->date(),
         ];

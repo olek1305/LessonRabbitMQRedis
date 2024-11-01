@@ -16,10 +16,14 @@ class OrderItemFactory extends Factory
      */
     public function definition(): array
     {
+        $price = $this->faker->numberBetween(10, 1000);
+
         return [
             'product_title' => $this->faker->word(),
-            'price' => $this->faker->randomFloat(2, 10, 100),
+            'price' => $price,
             'quantity' => $this->faker->numberBetween(1, 10),
+            'influencer_revenue' => 0.1 * $price,
+            'admin_revenue' => 0.9 * $price,
         ];
     }
 }
