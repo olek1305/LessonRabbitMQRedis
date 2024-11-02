@@ -1,6 +1,6 @@
 const dev = {
     BASE_URL: 'http://127.0.0.1:8003/api/influencer',
-    CHECKOUT_URL: 'http://localhost:3001',
+    CHECKOUT_URL: 'http://localhost:3002',
 }
 
 const prod = {
