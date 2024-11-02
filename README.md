@@ -2,7 +2,7 @@ It's about learn with RabbitMQ and Redis.
 
 Topic between admin and influencers.
 
-    Admin:
+    Back-end Admin:
 - **mysql** - `33071:3306`
 - **laravel** - `8001:8000`
 
@@ -11,7 +11,7 @@ Topic between admin and influencers.
 - **react** - `:3000`
 
 
-    Influencer:
+    Back-end Influencer:
 - **mysql** - `33070:3306`
 - **laravel** - `8003:8000`
 - **redis** - `:6379`
@@ -22,7 +22,7 @@ Topic between admin and influencers.
 - **react** - `:3001`
 
 
-    Checkout:
+    Front-end Checkout:
 - **NextJs** - `:3002`
 
 
