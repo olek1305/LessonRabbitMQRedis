@@ -5,7 +5,7 @@ services:
             context: .
             dockerfile: Dockerfile
         ports:
-            - "8000:8000"
+            - "8001:8000"
         depends_on:
             - admin_db
         volumes:
@@ -14,7 +14,7 @@ services:
             - APP_ENV=local
             - APP_DEBUG=true
         working_dir: /var/www
-        command: php artisan serve
+        command: php artisan serve --host=0.0.0.0 --port=8000
 
     admin_db:
         container_name: admin_db
