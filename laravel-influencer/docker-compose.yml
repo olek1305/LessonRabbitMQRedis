@@ -9,7 +9,6 @@ services:
         depends_on:
             - influencer_db
             - redis
-            - mailhog
         volumes:
             - .:/var/www
         environment:
@@ -38,14 +37,6 @@ services:
             - "6379:6379"
         volumes:
             - redis_data:/data
-
-
-    mailhog:
-        container_name: influencer_mailhog
-        image: mailhog/mailhog
-        ports:
-            - "1025:1025"
-            - "8025:8025"
 
 volumes:
     db_data:

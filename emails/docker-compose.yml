@@ -1,0 +1,39 @@
+services:
+    queue:
+        container_name: email_queue
+        build:
+            context: .
+            dockerfile: Dockerfile
+        depends_on:
+            - email_db
+            - mailhog
+        volumes:
+            - .:/var/www
+        environment:
+            - APP_ENV=local
+            - APP_DEBUG=true
+        working_dir: /var/www
+        command: php artisan queue:work
+
+    email_db:
+        container_name: email_db
+        image: mysql:8.0
+        environment:
+            MYSQL_ROOT_PASSWORD: root
+            MYSQL_DATABASE: email_database
+            MYSQL_USER: email_user
+            MYSQL_PASSWORD: password
+        ports:
+            - "33072:3306"
+        volumes:
+            - db_data:/var/lib/mysql
+
+    mailhog:
+        container_name: email_mailhog
+        image: mailhog/mailhog
+        ports:
+        - "1025:1025"  # SMTP port
+        - "8025:8025"  # Web UI port
+
+volumes:
+    db_data:
