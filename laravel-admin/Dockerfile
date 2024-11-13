@@ -1,37 +1,37 @@
-# Wybieramy oficjalny obraz PHP 8.3
+# Set up PHP 8.3 environment
 FROM php:8.3-cli
 
-# Instalacja zależności systemowych
+# Added system dependencies (git, curl, zip, unzip)
 RUN apt-get update && apt-get install -y \
     git \
     curl \
     zip \
-    unzip
+    unzip \
+    libsodium-dev \
+    libpq-dev
 
-# Instalacja zależności PHP
-RUN docker-php-ext-install pdo pdo_mysql
+# Installed PHP extensions
+RUN docker-php-ext-install sockets pdo pdo_mysql sodium
 
-# Instalacja kompozytora
+# Installed Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
-# Ustawienie katalogu roboczego
+# Setting up the working directory
 WORKDIR /var/www
 
-# Kopiowanie plików aplikacji do obrazu
+# Copying application files to an image
 COPY . .
 
-# Instalacja zależności aplikacji za pomocą Composera
+# Installing application dependencies using Composer
 RUN composer install --no-interaction --prefer-dist --optimize-autoloader
 
 # Dodanie grupy i użytkownika 'admin'
 RUN groupadd -g 1000 admin && \
     useradd -u 1000 -ms /bin/bash -g admin admin
 
-# Zmiana właściciela katalogu na użytkownika 'admin'
+# Added admin user with proper ownership
 RUN chown -R admin:admin /var/www
 
-# Ustawienie użytkownika, na którym będą wykonywane dalsze polecenia
+# Set the user on which further commands will be executed
 USER admin
 
-# Domyślne polecenie do uruchomienia serwera
-CMD ["php", "artisan", "serve", "--host=0.0.0.0", "--port=8000"]
