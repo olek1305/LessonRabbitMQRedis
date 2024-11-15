@@ -33,15 +33,21 @@ Route::prefix('admin')->group(function () {
 
     Route::group(['middleware' => ['auth:api', 'scope:admin']], function () {
         Route::post('logout', [AuthController::class, 'logout']);
-        Route::get('chart', [DashboardController::class, 'chart']);
-        Route::post('upload', [ImageController::class, 'upload']);
-        Route::get('export', [OrderController::class, 'export']);
+        Route::get('user', [AuthController::class, 'user']);
+        Route::put('users/info', [AuthController::class, 'updateInfo']);
+        Route::put('users/password', [AuthController::class, 'updatePassword']);
 
-        Route::apiResource('users', UserController::class);
-        Route::apiResource('roles', RoleController::class);
-        Route::apiResource('products', AdminProductController::class);
-        Route::apiResource('orders', OrderController::class)->only(['index', 'show']);
-        Route::apiResource('permissions', PermissionController::class)->only(['index']);
+        Route::namespace('Admin')->group(function () {
+            Route::get('chart', [DashboardController::class, 'chart']);
+            Route::post('upload', [ImageController::class, 'upload']);
+            Route::get('export', [OrderController::class, 'export']);
+
+            Route::apiResource('users', UserController::class);
+            Route::apiResource('roles', RoleController::class);
+            Route::apiResource('products', AdminProductController::class);
+            Route::apiResource('orders', OrderController::class)->only(['index', 'show']);
+            Route::apiResource('permissions', PermissionController::class)->only(['index']);
+        });
     });
 });
 
