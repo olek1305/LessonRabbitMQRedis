@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 /**
- * 
+ *
  *
  * @property int $id
  * @property string $name
@@ -26,4 +26,9 @@ class Permission extends Model
     use HasFactory;
 
     protected $guarded = [];
+
+    public function roles()
+    {
+        return $this->belongsToMany(Role::class, 'role_permission');
+    }
 }
