@@ -4,7 +4,6 @@ namespace Database\Seeders;
 
 use App\Models\Permission;
 use App\Models\Role;
-use DB;
 use Illuminate\Database\Seeder;
 
 class RolePermissionSeeder extends Seeder
@@ -16,22 +15,16 @@ class RolePermissionSeeder extends Seeder
     {
         $permissions = Permission::all();
 
-        $admin = Role::whereName('admin')->first();
-        foreach ($permissions as $permission) {
-            DB::table('role_permission')->insert([
-                'role_id' => $admin->id,
-                'permission_id' => $permission->id,
-            ]);
+        $admin = Role::where('name', 'admin')->first();
+        if ($admin) {
+            $admin->permissions()->sync($permissions->pluck('id')->toArray());
         }
 
-        $editor = Role::whereName('editor')->first();
-        foreach ($permissions as $permission) {
-            if($permission->name != 'edit_roles') {
-                DB::table('role_permission')->insert([
-                    'role_id' => $editor->id,
-                    'permission_id' => $permission->id,
-                ]);
-            }
+        $editor = Role::where('name', 'editor')->first();
+        if ($editor) {
+            $editor->permissions()->sync(
+                $permissions->filter(fn($permission) => $permission->name !== 'edit_roles')->pluck('id')->toArray()
+            );
         }
 
         $viewerRoles = [
@@ -41,14 +34,11 @@ class RolePermissionSeeder extends Seeder
             'view_orders',
         ];
 
-        $viewer = Role::whereName('viewer')->first();
-        foreach ($permissions as $permission) {
-            if (!in_array($permission->name, $viewerRoles)) {
-                DB::table('role_permission')->insert([
-                    'role_id' => $viewer->id,
-                    'permission_id' => $permission->id
-                ]);
-            }
+        $viewer = Role::where('name', 'viewer')->first();
+        if ($viewer) {
+            $viewer->permissions()->sync(
+                $permissions->filter(fn($permission) => in_array($permission->name, $viewerRoles))->pluck('id')->toArray()
+            );
         }
     }
 }
