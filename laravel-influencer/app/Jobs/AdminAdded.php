@@ -10,7 +10,7 @@ use Illuminate\Queue\SerializesModels;
 
 class AdminAdded implements ShouldQueue
 {
-    use Queueable;
+    use Queueable, Dispatchable, SerializesModels;
 
     public $email;
 
