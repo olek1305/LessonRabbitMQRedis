@@ -1,7 +1,7 @@
-# Set up PHP 8.3 environment
+# Use PHP 8.3 CLI as the base image
 FROM php:8.3-cli
 
-# Added system dependencies (git, curl, zip, unzip)
+# Install system dependencies
 RUN apt-get update && apt-get install -y \
     git \
     curl \
@@ -10,28 +10,27 @@ RUN apt-get update && apt-get install -y \
     libsodium-dev \
     libpq-dev
 
-# Installed PHP extensions
+# Install PHP extensions
 RUN docker-php-ext-install sockets pdo pdo_mysql sodium
 
-# Installed Composer
+# Install Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
-# Setting up the working directory
-WORKDIR /var/www
+# Create the working directory and set it
+WORKDIR /app
 
-# Copying application files to an image
+# Copy the application files into the container's /app directory
 COPY . .
 
-# Installing application dependencies using Composer
+# Install application dependencies using Composer
 RUN composer install --no-interaction --prefer-dist --optimize-autoloader
 
-# Dodanie grupy i użytkownika 'admin'
+# Add 'admin' group and user
 RUN groupadd -g 1000 admin && \
     useradd -u 1000 -ms /bin/bash -g admin admin
 
-# Added admin user with proper ownership
-RUN chown -R admin:admin /var/www
+# Change ownership of the application files
+RUN chown -R admin:admin /app
 
-# Set the user on which further commands will be executed
+# Switch to the 'admin' user for subsequent commands
 USER admin
-
