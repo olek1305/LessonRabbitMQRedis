@@ -7,7 +7,7 @@ on:
     branches: [ "main" ]
 
 jobs:
-  laravel-influencer-tests:
+  main-tests:
     runs-on: ubuntu-latest
 
     strategy:
@@ -25,38 +25,38 @@ jobs:
       - uses: actions/checkout@v4
       - name: Copy .env
         run: |
-          cd laravel-influencer
+          cd main
           php -r "file_exists('.env') || copy('.env.example', '.env');"
 
       - name: Update Dependencies
         run: |
-          cd laravel-influencer
+          cd main
           composer update --no-ansi --no-interaction --prefer-dist
 
       - name: Install Dependencies
         run: |
-          cd laravel-influencer
+          cd main
           composer install -q --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist
 
       - name: Generate key
         run: |
-          cd laravel-influencer
+          cd main
           php artisan key:generate
 
       - name: Directory Permissions
         run: |
-          cd laravel-influencer
+          cd main
           chmod -R 777 storage bootstrap/cache
 
       - name: Create Database
         run: |
-          cd laravel-influencer
+          cd main
           mkdir -p database
           touch database/database.sqlite
 
       - name: Migrate with seeds via sqlite
         run: |
-          cd laravel-influencer
+          cd main
           php artisan migrate --seed
 
       - name: Execute tests (Unit and Feature tests) via PHPUnit/Pest
@@ -64,5 +64,5 @@ jobs:
           DB_CONNECTION: sqlite
           DB_DATABASE: database/database.sqlite
         run: |
-          cd laravel-influencer
+          cd main
           php artisan test
