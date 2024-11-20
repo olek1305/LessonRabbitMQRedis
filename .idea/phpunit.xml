@@ -5,6 +5,8 @@
       <list>
         <option value="$PROJECT_DIR$/influencer/tests" />
         <option value="$PROJECT_DIR$/laravel-admin/tests" />
+        <option value="$PROJECT_DIR$/emails/tests" />
+        <option value="$PROJECT_DIR$/main/tests" />
       </list>
     </option>
   </component>
