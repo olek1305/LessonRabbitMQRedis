@@ -21,3 +21,7 @@ Topic between admin and influencers.
     Email
     - "1025:1025"  # SMTP port
     - "8025:8025"  # Web UI port
+---------------------------
+    Users
+    - mysql - `33072:3306`
+    - laravel - `8004:8000`
