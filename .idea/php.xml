@@ -419,8 +419,6 @@
   </component>
   <component name="PhpUnit">
     <phpunit_settings>
-      <PhpUnitSettings configuration_file_path="$PROJECT_DIR$/laravel-admin/phpunit.xml" custom_loader_path="$PROJECT_DIR$/laravel-admin/vendor/autoload.php" use_configuration_file="true" />
-      <PhpUnitSettings configuration_file_path="$PROJECT_DIR$/influencer/phpunit.xml" custom_loader_path="$PROJECT_DIR$/influencer/vendor/autoload.php" use_configuration_file="true" />
       <PhpUnitSettings configuration_file_path="$PROJECT_DIR$/main/phpunit.xml" custom_loader_path="$PROJECT_DIR$/main/vendor/autoload.php" use_configuration_file="true" />
     </phpunit_settings>
   </component>
