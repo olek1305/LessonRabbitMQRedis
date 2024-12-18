@@ -2,6 +2,7 @@ import React, {Component, SyntheticEvent} from 'react';
 import './Public.css';
 import axios from 'axios';
 import {Redirect} from 'react-router-dom';
+import constants from "../constans"
 
 class Login extends Component {
     email = '';
@@ -13,7 +14,7 @@ class Login extends Component {
     submit = async (e: SyntheticEvent) => {
         e.preventDefault();
 
-        await axios.post('login', {
+        await axios.post(`${constants.USERS_URL}/login`, {
             email: this.email,
             password: this.password,
             scope: 'admin'

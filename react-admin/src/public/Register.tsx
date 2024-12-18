@@ -3,6 +3,7 @@ import './Public.css'
 import axios from 'axios';
 import {Redirect} from 'react-router-dom';
 import Wrapper from "../secure/Wrapper";
+import constants from "../constans"
 
 class Register extends Component {
     first_name = '';
@@ -17,7 +18,7 @@ class Register extends Component {
     submit = async (e: SyntheticEvent) => {
         e.preventDefault();
 
-        await axios.post('register', {
+        await axios.post(`${constants.USERS_URL}/register`, {
             first_name: this.first_name,
             last_name: this.last_name,
             email: this.email,
