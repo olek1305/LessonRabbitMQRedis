@@ -35,17 +35,16 @@ class AuthController extends Controller
 
             $expiration = Carbon::now()->addHours(2);
 
-            // Utworzenie ciasteczka z tokenem
             $cookie = cookie(
-                'jwt',                      // Nazwa ciasteczka
-                $token,                     // Wartość (token)
-                60 * 24,                    // Czas trwania w minutach (1 dzień)
-                '/',                        // Ścieżka (root)
-                'localhost',                // Domena lokalna
-                false,                      // Secure = false, bo nie używasz HTTPS
-                true,                       // HttpOnly
-                false,                      // HTTPS nie jest wymagany
-                'Lax'                       // SameSite ustawione na 'Lax'
+                'jwt',
+                $token,
+                60 * 24,
+                '/',
+                'localhost',
+                false,
+                true,
+                false,
+                'Lax'
             );
 
             return response([
