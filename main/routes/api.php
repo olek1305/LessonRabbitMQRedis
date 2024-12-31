@@ -31,7 +31,7 @@ Route::prefix('admin')->group(function () {
     Route::post('login', [AuthController::class, 'login']);
     Route::post('register', [AuthController::class, 'register']);
 
-    Route::group(['middleware' => ['auth:api', 'scope:admin']], function () {
+    Route::group(['middleware' => ['scope.admin']], function () {
         Route::post('logout', [AuthController::class, 'logout']);
         Route::get('user', [AuthController::class, 'user']);
         Route::put('users/info', [AuthController::class, 'updateInfo']);

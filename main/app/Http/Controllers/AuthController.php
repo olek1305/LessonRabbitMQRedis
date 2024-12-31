@@ -8,6 +8,7 @@ use App\Http\Requests\UpdateInfoRequest;
 use App\Http\Requests\UpdatePasswordRequest;
 use App\Http\Resources\UserResource;
 use App\Models\User;
+use App\Services\UserService;
 use Cookie;
 use Illuminate\Contracts\Routing\ResponseFactory;
 use Illuminate\Foundation\Application;
@@ -19,6 +20,22 @@ use Symfony\Component\HttpFoundation\Response;
 
 class AuthController extends Controller
 {
+    /**
+     * @var UserService
+     */
+    private UserService $userService;
+
+    /**
+     * Constructor method for the class.
+     *
+     * @param UserService $userService An instance of the UserService.
+     * @return void
+     */
+    public function __construct(UserService $userService)
+    {
+        $this->userService = $userService;
+    }
+
     public function login(Request $request)
     {
         if (Auth::attempt($request->only('email', 'password'))) {
@@ -103,16 +120,21 @@ class AuthController extends Controller
 
     public function user(): UserResource
     {
-        $user = Auth::user();
+        $user = $this->userService->getUser();
 
         $resource = new UserResource($user);
 
         if($user->isInfluencer()) {
-            return $resource;
+            return $resource->additional([
+                'data' => [
+                    'renevue' => $user->renevue()
+                ],
+            ]);
         }
 
         return (new UserResource($user))->additional([
             'data' => [
+                'role' => $user->role(),
                 'permissions' => $user->permissions()
             ]
         ]);
