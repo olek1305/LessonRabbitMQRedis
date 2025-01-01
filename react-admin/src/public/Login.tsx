@@ -8,21 +8,33 @@ class Login extends Component {
     email = '';
     password = '';
     state = {
-        redirect: false
+        redirect: false,
+        error: ''
     }
 
     submit = async (e: SyntheticEvent) => {
         e.preventDefault();
 
-        await axios.post(`${constants.USERS_URL}/login`, {
-            email: this.email,
-            password: this.password,
-            scope: 'admin'
-        });
+        try {
+            const response = await axios.post(`${constants.USERS_URL}/login`, {
+                email: this.email,
+                password: this.password,
+                scope: 'admin'
+            });
 
-        this.setState({
-            redirect: true
-        })
+            console.log('Odpowiedź z API:', response.data);
+
+            this.setState({
+                redirect: true,
+                error: ''
+            })
+        } catch (e) {
+            console.log(e);
+
+            this.setState({
+                error: 'Incorrect email or password. Please try again.'
+            });
+        }
     }
 
     render() {
@@ -44,11 +56,15 @@ class Login extends Component {
                         <input type="password" id="inputPassword" className="form-control" placeholder="Password"
                                onChange={e => this.password = e.target.value}
                                required/>
+                        {this.state.error && (
+                            <div className="alert alert-danger" role="alert" style={{ color: 'red' }}>
+                                {this.state.error}
+                            </div>
+                        )}
                         <button className="btn btn-lg btn-primary w-100" type="submit">Sign in</button>
                     </form>
                 </div>
             </div>
-
         )
     }
 }
